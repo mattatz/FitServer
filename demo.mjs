@@ -43,7 +43,7 @@ const visualize = (bins = [], placed = [], placements = [], unplaced = []) => {
 }
 
 const start = () => {
-  let bin = new Fit.Bin(0, width, height, { strokeColor: '#aaa', strokeWidth: 2 })
+  let bin = new Fit.Bin(0, width, height)
 
   let parts = []
   for (let i = 0; i < 10; i++) {
