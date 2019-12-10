@@ -42,7 +42,7 @@ const visualize = (bins = [], placed = [], placements = [], unplaced = []) => {
   graph.display()
 }
 
-const start = () => {
+const start = async () => {
   let bin = new Fit.Bin(0, width, height)
 
   let parts = []
@@ -60,7 +60,7 @@ const start = () => {
 
   visualize([], [], [], parts)
 
-  return packer.start([bin], parts, config, {
+  let result = await packer.start([bin], parts, config, {
     onEvaluation: (e) => {
     },
     onPacking: (e) => {
@@ -72,9 +72,13 @@ const start = () => {
       }
     },
     onPackingCompleted: (e) => {
-      visualize(e.bins, e.placed, e.placements, e.unplaced)
+      // visualize(e.bins, e.placed, e.placements, e.unplaced)
     }
   })
+
+  visualize(result.bins, result.placed, result.placements, result.unplaced)
+
+  return result
 }
 
 start()

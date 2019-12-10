@@ -38,32 +38,22 @@ module.exports = class Packer {
       })
     }
 
-    this.packAsync({
+    return this.packAsync({
       onEvaluation: (e) => {
         if (callbacks && callbacks.onEvaluation)
           callbacks.onEvaluation(e)
       },
       onPacking: (e) => {
         if (callbacks && callbacks.onPacking) {
-          this.onPacking(e, callbacks.onPacking)
+          callbacks.onPacking(e)
         }
       },
       onPackingCompleted: (e) => {
         if (callbacks && callbacks.onPackingCompleted) {
-          this.onPacking(e, callbacks.onPackingCompleted)
+          callbacks.onPackingCompleted(e)
         }
       }
     })
-  }
-
-  onPacking(e, callback) {
-    let placed = this.applyPlacements(e.placements, this.source.map(p => p.clone()))
-    e.bins = this.bins
-    e.placed = placed
-    e.unplaced = e.unplaced.map(p => {
-      return this.source.find(part => part.id === p.id)
-    })
-    callback(e)
   }
 
   stop() {
@@ -85,6 +75,16 @@ module.exports = class Packer {
     return parts.map((part, idx) => {
       return part.transform(dna.genes[idx], range)
     })
+  }
+
+  format(args) {
+    let placed = this.applyPlacements(args.placements, this.source.map(p => p.clone()))
+    args.bins = this.bins
+    args.placed = placed
+    args.unplaced = args.unplaced.map(p => {
+      return this.source.find(part => part.id === p.id)
+    })
+    return args
   }
 
   applyPlacements(placements, parts) {
@@ -117,11 +117,11 @@ module.exports = class Packer {
 
     let generations = this.config.generations
     return new Promise((resolve) => {
-      this.stepAsync(null, 0, generations, ga, cache, callbacks).then((dna) => {
+      this.stepAsync(null, 0, generations, ga, cache, callbacks).then((args) => {
         for (let key in cache) {
           delete cache[key]
         }
-        resolve(dna.options.placements)
+        resolve(args)
       })
    })
   }
@@ -142,20 +142,20 @@ module.exports = class Packer {
           unplaced: dominant.options.unplaced,
           dominant: dominant
         }
+        let result = this.format(args)
 
         if (current < generations) {
           if (callbacks.onPacking !== undefined) {
-            callbacks.onPacking(args)
+            callbacks.onPacking(result)
           }
 
           ga.step()
           return this.stepAsync(dominant, current + 1, generations, ga, cache, callbacks).then(resolve)
         } else {
           if (callbacks.onPackingCompleted !== undefined) {
-            callbacks.onPackingCompleted(args)
+            callbacks.onPackingCompleted(result)
           }
-
-          resolve(dominant)
+          resolve(result)
         }
       })
     })
