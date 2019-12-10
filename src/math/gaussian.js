@@ -15,7 +15,7 @@ const stdSeed = function(rnd, mu = 0, sigma = 1) {
   return mu + sigma * rand_std_normal
 }
 
-export {
+module.exports = {
   std,
   stdSeed
 }

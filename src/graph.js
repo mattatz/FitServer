@@ -1,8 +1,5 @@
 
-// util.inspect(arr, { maxArrayLength: null })
-import util from 'util'
-
-export default class Graph {
+module.exports = class Graph {
 
   constructor(width, height) {
     this.array = []

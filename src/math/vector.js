@@ -1,5 +1,5 @@
 
-export default class Vector {
+module.exports = class Vector {
 
   constructor(x = 0, y = 0, marked = false) {
     this.x = x

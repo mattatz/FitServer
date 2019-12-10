@@ -1,6 +1,6 @@
 const r = Symbol()
 
-export default class XorShift {
+module.exports = class XorShift {
 
   constructor(w = 0, x = 123456789, y = 362436069, z = 521288629) {
     this.w = w + 1

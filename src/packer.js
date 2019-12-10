@@ -1,14 +1,14 @@
 
-import XorShift from './math/xorshift.mjs'
+const XorShift = require('./math/xorshift.js')
 
-import GA from './ga/ga.mjs'
+const GA = require('./ga/ga.js')
 
-import NfpWorker from './workers/nfp.worker.mjs'
-import PlaceWorker from './workers/place.worker.mjs'
+const NfpWorker = require('./workers/nfp.worker.js')
+const PlaceWorker = require('./workers/place.worker.js')
 
-import { createUniqueKey, offsetPolygon } from './util.mjs'
+const { createUniqueKey, offsetPolygon } = require('./util.js')
 
-export default class Packer {
+module.exports = class Packer {
 
   constructor() {
     this.running = false

@@ -1,9 +1,9 @@
 
-import ClipperLib from './lib/clipper.mjs'
-import Vector from './math/vector.mjs'
-import IndexedVector from './math/indexed_vector.mjs'
-import Polygon from './math/polygon.mjs'
-import BoundingBox from './math/bounding_box.mjs'
+const ClipperLib = require('./lib/clipper.js')
+const Vector = require('./math/vector.js')
+const IndexedVector = require('./math/indexed_vector.js')
+const Polygon = require('./math/polygon.js')
+const BoundingBox = require('./math/bounding_box.js')
 
 const TOL = 1e-9
 
@@ -978,7 +978,7 @@ const createUniqueKey = function (A, B, inside) {
   })
 }
 
-export {
+module.exports = {
   approximately,
   bounds,
   clipperScale, clipperThreshold,

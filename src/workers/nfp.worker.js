@@ -1,9 +1,9 @@
 
-import { EventEmitter } from 'events'
-import { noFitRectanglePolygon, noFitPolygon, minkowskiDifference } from '../util.mjs'
-import Part from '../part.mjs'
+const EventEmitter = require('events').EventEmitter
+const { noFitRectanglePolygon, noFitPolygon, minkowskiDifference} = require('../util.js')
+const Part = require('../part.js')
 
-export default class NfpWorker extends EventEmitter {
+module.exports = class NfpWorker extends EventEmitter {
 
   constructor() {
     super()

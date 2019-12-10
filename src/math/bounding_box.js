@@ -1,5 +1,5 @@
 
-export default class BoundingBox { 
+module.exports = class BoundingBox { 
 
   constructor(min, max) {
     this.min = min

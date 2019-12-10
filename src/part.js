@@ -1,8 +1,8 @@
 
-import Polygon from './math/polygon.mjs'
-import Vector from './math/vector.mjs'
+const Polygon = require('./math/polygon.js')
+const Vector = require('./math/vector.js')
 
-export default class Part extends Polygon {
+module.exports = class Part extends Polygon {
   constructor(id, points, options) {
     super(points, options)
 

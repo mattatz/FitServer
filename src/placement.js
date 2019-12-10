@@ -1,7 +1,7 @@
 
-export default class Placement {
+module.exports = class Placement {
 
-  constructor (bin, part, position, rotation) {
+  constructor(bin, part, position, rotation) {
     this.bin = bin
     this.part = part
     this.position = position

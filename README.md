@@ -2,9 +2,7 @@ FitServer
 =====================
 
 *[Fit](https://github.com/mattatz/Fit)* implementation for Node.js.  
-
 You can execute irregular bin packing in server-side.  
-
 *Fit* is a port of *[SVGnest](https://github.com/Jack000/SVGnest)* project for modularity.  
 
 ## Demo
@@ -13,7 +11,7 @@ You can execute irregular bin packing in server-side.
 
 ```js
 // in FitServer folder
-node --experimental-modules ./demo.mjs
+node ./demo.js
 ```
 
 ## Usage

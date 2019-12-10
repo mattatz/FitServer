@@ -1,7 +1,7 @@
-import Part from './part.mjs'
-import Vector from './math/vector.mjs'
+const Part = require('./part.js')
+const Vector = require('./math/vector.js')
 
-export default class Bin extends Part {
+module.exports = class Bin extends Part {
 
   constructor(id, width, height, options) {
     let points = [

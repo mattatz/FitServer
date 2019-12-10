@@ -1,14 +1,14 @@
 
-import { EventEmitter } from 'events'
-import ClipperLib from '../lib/clipper.mjs'
-import { approximately, bounds, createUniqueKey, toClipperCoordinates, toNestCoordinates, clipperScale, clipperThreshold } from '../util.mjs'
-import Polygon from '../math/polygon.mjs'
-import Part from '../part.mjs'
-import Bin from '../bin.mjs'
-import Vector from '../math/vector.mjs'
-import Placement from '../placement.mjs'
+const EventEmitter = require('events').EventEmitter
+const ClipperLib = require('../lib/clipper.js')
+const { approximately, bounds, createUniqueKey, toClipperCoordinates, toNestCoordinates, clipperScale, clipperThreshold } = require('../util.js')
+const Polygon = require('../math/polygon.js')
+const Part = require('../part.js')
+const Bin = require('../bin.js')
+const Vector = require('../math/vector.js')
+const Placement = require('../placement.js')
 
-export default class PlaceWorker extends EventEmitter {
+module.exports = class PlaceWorker extends EventEmitter {
 
   constructor() {
     super()

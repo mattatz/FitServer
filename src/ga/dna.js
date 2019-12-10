@@ -1,7 +1,7 @@
 
-import { stdSeed } from '../math/gaussian.mjs'
+const stdSeed = require('../math/gaussian.js').stdSeed
 
-export default class DNA {
+module.exports = class DNA {
 
   constructor (genes = []) {
     this.genes = genes

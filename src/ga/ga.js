@@ -1,7 +1,7 @@
 
-import DNA from './dna.mjs'
+const DNA = require('./dna.js')
 
-export default class GA {
+module.exports = class GA {
 
   constructor(rnd, gene, config = { steps: 4, population: 30, mutationRate: 0.2 }) {
     this.rnd = rnd

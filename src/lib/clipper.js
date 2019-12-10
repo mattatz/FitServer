@@ -6702,4 +6702,4 @@ ClipperLib.JS.PolyTreeToExPolygons = function (polytree) {
 	return expolygons;
 };
 
-export default ClipperLib
+module.exports = ClipperLib

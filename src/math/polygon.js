@@ -1,8 +1,8 @@
 
-import Vector from './vector.mjs'
-import BoundingBox from './bounding_box.mjs'
+const Vector = require('./vector.js')
+const BoundingBox = require('./bounding_box.js')
 
-export default class Polygon {
+module.exports = class Polygon {
 
   constructor(points, options = {}) {
     this.points = points

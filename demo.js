@@ -1,5 +1,5 @@
 
-import * as Fit from './src/index.mjs'
+const Fit = require('./src/index.js')
 
 let packer = new Fit.Packer()
 

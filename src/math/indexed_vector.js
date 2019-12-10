@@ -1,6 +1,7 @@
-import Vector from './vector.mjs'
 
-export default class IndexedVector extends Vector {
+const Vector = require('./vector.js')
+
+module.exports = class IndexedVector extends Vector {
 
   constructor (x, y, start, end) {
     super(x, y)
