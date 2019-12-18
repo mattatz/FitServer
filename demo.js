@@ -9,6 +9,15 @@ const height = 128
 
 const graph = new Fit.Graph(width, height)
 
+function createDebugRect(id, size = 100, options = {}) {
+  let points = []
+  points.push(new Fit.Vector(0, size))
+  points.push(new Fit.Vector(0, 0))
+  points.push(new Fit.Vector(size, 0))
+  points.push(new Fit.Vector(size, size))
+  return new Fit.Part(id, points, options)
+}
+
 function createDebugPart(id, vertices = 6, minRadius = 50, maxRadius = 100, dx = 0, dy = 0, options = {}) {
   let points = []
 
@@ -39,7 +48,7 @@ const visualize = (bins = [], placed = [], placements = [], unplaced = []) => {
     })
   })
 
-  graph.display()
+  graph.display(1)
 }
 
 const start = async () => {
@@ -49,6 +58,11 @@ const start = async () => {
   for (let i = 0; i < 10; i++) {
     parts.push(createDebugPart(parts.length, Math.floor(Math.random() * 5 + 3), 10, 50, 0, 0))
   }
+  /*
+  for (let i = 0; i < 3; i++) {
+    parts.push(createDebugRect(parts.length, 100))
+  }
+  */
 
   let config = {
     spacing: 2,             // space between parts
@@ -67,7 +81,7 @@ const start = async () => {
       visualize(e.bins, e.placed, e.placements, e.unplaced)
       if (e.unplaced.length > 0) {
         let last = e.bins[e.bins.length - 1]
-        let newBin = new Fit.Bin(last.id - 1, width, height, { strokeColor: '#aaa', strokeWidth: 2 })
+        let newBin = new Fit.Bin(last.id + 1, width, height, { strokeColor: '#aaa', strokeWidth: 2 })
         packer.addBin(newBin)
       }
     },

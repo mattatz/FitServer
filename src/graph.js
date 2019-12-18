@@ -33,19 +33,51 @@ module.exports = class Graph {
     }
   }
 
-  display() {
+  lod(source, width, height) {
+    let array = []
+    let w = width - 1
+    let h = height - 1
+    for (let y = 0; y < height; y += 2) {
+      let row = []
+      for (let x = 0; x < width; x += 2) {
+        let x0 = x
+        let x1 = Math.min(x + 1, w)
+        let y0 = y
+        let y1 = Math.min(y + 1, h)
+        let s0 = source[y0][x0]
+        let s1 = source[y0][x1]
+        let s2 = source[y1][x0]
+        let s3 = source[y1][x1]
+        row.push(s0 || s1 || s2 || s2)
+      }
+      array.push(row)
+    }
+    return array
+  }
+
+  display(lod = 0) {
     let table = ''
 
     let rows = process.stdout.rows
     let columns = process.stdout.columns
 
-    for (let y = 0; y < this.height; y++) {
+    let source = this.array
+    let width = this.width
+    let height = this.height
+
+    for (let i = 0; i < lod; i++) {
+      source = this.lod(source, width, height)
+      width = width / 2
+      height = height / 2
+    }
+
+    for (let y = 0; y < height; y++) {
       if (y >= rows) break
 
-      for (let x = 0; x < this.width; x++) {
+      for (let x = 0; x < width; x++) {
         if (x >= columns) break
 
-        if(this.array[y][x]) {
+        if(source[y][x]) {
           table += 'x'
         } else {
           table += '-'
