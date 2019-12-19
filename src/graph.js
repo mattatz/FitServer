@@ -48,7 +48,7 @@ module.exports = class Graph {
         let s1 = source[y0][x1]
         let s2 = source[y1][x0]
         let s3 = source[y1][x1]
-        row.push(s0 || s1 || s2 || s2)
+        row.push(s0 || s1 || s2 || s3)
       }
       array.push(row)
     }
@@ -67,8 +67,8 @@ module.exports = class Graph {
 
     for (let i = 0; i < lod; i++) {
       source = this.lod(source, width, height)
-      width = width / 2
-      height = height / 2
+      width = Math.ceil(width / 2)
+      height = Math.ceil(height / 2)
     }
 
     for (let y = 0; y < height; y++) {
