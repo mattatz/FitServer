@@ -219,10 +219,6 @@ module.exports = class PlaceWorker extends EventEmitter {
         // allPlacements.push(placements)
         allPlacements = allPlacements.concat(placements)
       }
-      else {
-        break // something went wrong
-      }
-
     }
 
     // there were parts that couldn't be placed
