@@ -1,8 +1,11 @@
 
+const { Worker, isMainThread, workerData, parentPort, threadId } = require('worker_threads')
+
 const XorShift = require('./math/xorshift.js')
 
 const GA = require('./ga/ga.js')
 
+const Polygon = require('./math/polygon.js')
 const NfpWorker = require('./workers/nfp.worker.js')
 const PlaceWorker = require('./workers/place.worker.js')
 
@@ -30,6 +33,9 @@ module.exports = class Packer {
     this.bins = bins // Disable sort for bins
     this.source = this.parts = parts.map(p => p).sort((p0, p1) => { return (p0.area() > p1.area()) ? 1 : -1 })
 
+    this.group(this.bins)
+    this.group(this.source)
+
     this.config = config || {}
     this.rnd = new XorShift(this.config.seed || 0)
 
@@ -54,6 +60,35 @@ module.exports = class Packer {
           callbacks.onPackingCompleted(e)
         }
       }
+    })
+  }
+
+  group(polygons, prefix = '') {
+    polygons = polygons.slice()
+
+    let groups = []
+    groups.push([polygons.pop()])
+
+    polygons.forEach((poly) => {
+      let found = false
+      for (let i = 0, n = groups.length; i < n; i++) {
+        let grp = groups[i]
+        let head = grp[0]
+        if(head.approximately(poly)) {
+          grp.push(poly)
+          found = true
+        }
+      }
+
+      if (!found) {
+        groups.push([ poly ])
+      }
+    })
+
+    groups.forEach((grp, idx) => {
+      grp.forEach(poly => {
+        poly.groupId = `${prefix}${idx}`
+      })
     })
   }
 
@@ -195,8 +230,14 @@ module.exports = class Packer {
   evaluateAsync(dna, cache, onProgress) {
     let transformed = this.transform(dna, this.parts, this.config.rotationSteps || 4)
     return new Promise((resolve) => {
+
+      // let hrstart = process.hrtime()
       this.createNfpsAsync(transformed, cache, false, false, onProgress).then(() => {
+        // hrstart = process.hrtime()
         this.placeAsync(transformed, cache).then(function (result) {
+          // hrend = process.hrtime(hrstart)
+          // console.info('place worker time (hr): %ds %dms', hrend[0], hrend[1] / 1000000)
+
           transformed = []
           dna.evaluate(result.cost, result)
           resolve(dna)
@@ -207,8 +248,14 @@ module.exports = class Packer {
 
   placeAsync(parts, cache) {
     return new Promise((resolve) => {
+
+      // const hrstart = process.hrtime()
+
       const placeWorker = new PlaceWorker()
       placeWorker.on('message', function(data) {
+        // const hrend = process.hrtime(hrstart)
+        // console.info('place worker time (hr): %ds %dms', hrend[0], hrend[1] / 1000000)
+
         let result = data.result
         resolve(result)
       })
@@ -217,6 +264,24 @@ module.exports = class Packer {
         parts: parts,
         nfpCache: cache
       })
+
+      /*
+      const worker = new Worker('./src/workers/place-worker-thread.js', {
+        workerData: {
+          bins: this.bins,
+          parts: parts,
+          nfpCache: cache
+        }
+      })
+      worker.on('message', (message) => {
+        const hrend = process.hrtime(hrstart)
+        console.info('place worker time (hr): %ds %dms', hrend[0], hrend[1] / 1000000)
+
+        // const result = message.result.map(r => Polygon.fromJSON(r))
+        resolve(message.result)
+      })
+      */
+
     })
   }
 
@@ -256,7 +321,7 @@ module.exports = class Packer {
   createAllNfpAsync(pairs, current, cache, onProgress) {
     let len = pairs.length
 
-    // console.log(pairs, current, cache)
+    // console.log(pairs.length)
 
     return new Promise((resolve) => {
       if (current >= len) resolve(cache)
@@ -264,6 +329,7 @@ module.exports = class Packer {
         let pair = pairs[current]
         this.createNfpAsync(pair.A, pair.B, pair.inside, pair.edges).then((result) => {
           cache[result.key] = result.nfp
+          // console.log(result.key, result.nfp)
 
           if (onProgress !== undefined)
             onProgress(current / (len - 1))
@@ -277,20 +343,44 @@ module.exports = class Packer {
   createNfpAsync(A, B, inside = false, edges = false) {
     return new Promise((resolve) => {
 
-      let key = createUniqueKey(A, B, inside, edges)
+      const key = createUniqueKey(A, B, inside, edges)
+
+      // const hrstart = process.hrtime()
 
       const nfpWorker = new NfpWorker()
-
       nfpWorker.on('message', function(data) {
+        // const hrend = process.hrtime(hrstart)
+        // console.info('nfp worker time (hr): %ds %dms', hrend[0], hrend[1] / 1000000)
         resolve({ key: key, nfp: data.result })
       })
-
       nfpWorker.start({
         A: A,
         B: B,
         inside: inside,
         edges: edges
       })
+
+      /*
+      const hrstart = process.hrtime()
+      const worker = new Worker('./src/workers/nfp-worker-thread.js', {
+        workerData: {
+          A: A,
+          B: B,
+          inside: inside,
+          edges: edges
+        }
+      })
+      worker.on('message', (message) => {
+        const hrend = process.hrtime(hrstart)
+        console.info('nfp worker time (hr): %ds %dms', hrend[0], hrend[1] / 1000000)
+        // const result = message.result.map(r => Polygon.fromJSON(r))
+        const result = message.result
+        // console.log(result)
+        resolve({ key: key, nfp: result })
+      })
+      */
+      // const hrend = process.hrtime(hrstart)
+      // console.info('Setup time (hr): %ds %dms', hrend[0], hrend[1] / 1000000)
 
     })
   }

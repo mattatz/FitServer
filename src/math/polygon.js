@@ -7,11 +7,15 @@ module.exports = class Polygon {
   constructor(points, options = {}) {
     this.points = points
     this.options = options
+    this.groupId = ''
+    this._area = 0
   }
 
   static fromJSON(json) {
     let points = json.points.map(p => Vector.fromJSON(p))
-    return new Polygon(points, json.options)
+    let poly = new Polygon(points, json.options)
+    poly.groupId = json.groupId
+    return poly
   }
 
   bounds() {
@@ -49,16 +53,36 @@ module.exports = class Polygon {
   clone() {
     let points = this.points.map(p => p.clone())
     let np = new Polygon(points, this.options)
+    np.groupId = this.groupId
     return np
   }
 
   area() {
+    if (this._area > 0) return this._area
+
     let area = 0;
     let n = this.points.length
     for (let i = 0, j = n - 1; i < n; j = i++) {
       area += (this.points[j].x + this.points[i].x) * (this.points[j].y - this.points[i].y)
     }
-    return 0.5 * area
+    this._area = 0.5 * area
+    return this._area
+  }
+
+  approximately(other) {
+    let n = this.points.length
+    let m = other.points.length
+    if (n !== m) return false
+
+    for (let i = 0; i < n; i++) {
+      let p0 = this.points[i]
+      let p1 = other.points[i]
+      if (!p0.approximately(p1)) {
+        return false
+      }
+    }
+
+    return true
   }
 
 }

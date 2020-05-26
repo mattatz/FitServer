@@ -65,14 +65,16 @@ const start = async () => {
   */
 
   let config = {
-    spacing: 2,             // space between parts
-    rotationSteps: 4,       // # of angles for available rotation (ex. 4 means [0, 90, 180, 270] angles from 360 / 4 )
-    population: 10,         // # of population in GA
-    generations: 10,        // # of generations in GA
+    spacing: 4,             // space between parts
+    rotationSteps: 8,       // # of angles for available rotation (ex. 4 means [0, 90, 180, 270] angles from 360 / 4 )
+    population: 8,         // # of population in GA
+    generations: 8,        // # of generations in GA
     mutationRate: 0.25      // mutation rate in GA
   }
 
   visualize([], [], [], parts)
+
+  // const hrstart = process.hrtime()
 
   let result = await packer.start([bin], parts, config, {
     onEvaluation: (e) => {
@@ -91,6 +93,9 @@ const start = async () => {
   })
 
   visualize(result.bins, result.placed, result.placements, result.unplaced)
+
+  // const hrend = process.hrtime(hrstart)
+  // console.info('Execution time (hr): %ds %dms', hrend[0], hrend[1] / 1000000)
 
   return result
 }

@@ -29,6 +29,7 @@ module.exports = class NfpWorker extends EventEmitter {
         result = []
       }
     } else {
+      // result = noFitPolygon(pa, pb, data.inside, data.edges, debug)
       if (data.edges) {
         result = noFitPolygon(pa, pb, data.inside, data.edges, debug)
       } else {
