@@ -34,8 +34,7 @@ module.exports = class Bin extends Part {
   }
 
   toString() {
-    // return `bin:${this.id}`
-    return `${this.groupId}:${this.transformed}`
+    return `bin:${this.id}`
   }
 
 }
