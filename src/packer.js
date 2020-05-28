@@ -31,7 +31,7 @@ module.exports = class Packer {
     // Sort by area in descending
     // this.bins = bins.map(b => b).sort((b0, b1) => { return (b0.area() > b1.area()) ? 1 : -1 })
     this.bins = bins // Disable sort for bins
-    this.source = this.parts = parts.sort((p0, p1) => { return (p0.area() > p1.area()) ? -1 : 1 })
+    this.source = this.parts = parts.slice().sort((p0, p1) => { return (Math.abs(p0.area()) > Math.abs(p1.area())) ? -1 : 1 })
 
     this.group(this.bins)
     this.group(this.source)
